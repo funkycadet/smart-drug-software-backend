@@ -47,6 +47,5 @@
     "ts-node": "^10.9.1",
     "tsc-watch": "^6.0.4",
     "typescript": "^5.3.2"
-  },
-  "packageManager": "yarn@4.1.0"
+  }
 }
