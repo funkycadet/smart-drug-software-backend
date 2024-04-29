@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id String @id @unique @default(uuid())
+
+  name           String
+  email_address  String   @unique
+  password       String
+  refreshTokens String[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id String @id @unique @default(uuid())
+
+  firstName      String
+  lastName       String
+  email_address  String   @unique
+  password       String
+  age            String
+  allergies      String[]
+  refreshTokens String[]
+
+  Prescriptions Prescription[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Pharmacy {
+  id String @id @unique @default(uuid())
+
+  businessName   String
+  email_address  String   @unique
+  password       String
+  address        String
+  refreshTokens String[]
+
+  Inventory    Inventory[]
+  Prescription Prescription[]
+  Drug         Drug[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Inventory {
+  id String @id @unique @default(uuid())
+
+  category String
+
+  quantity   Int
+  price      Int
+  alert      Boolean   @default(true)
+  // status               String @default("available")
+  pharmacyId String?
+  Pharmacy   Pharmacy? @relation(fields: [pharmacyId], references: [id])
+  drugId     String?
+  Drug       Drug?     @relation(fields: [drugId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Drug {
+  id String @id @unique @default(cuid())
+
+  name                 String
+  brand                String
+  medical_condition    String
+  dosageStrengthNumber Int
+  dosageStrengthUnit   String
+  contraindications    String
+  interactions         String
+  picture              String
+
+  pharmacyId String?
+  Pharmacy   Pharmacy? @relation(fields: [pharmacyId], references: [id])
+
+  Prescription Prescription[]
+  Inventory    Inventory[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Prescription {
+  id String @id @unique @default(cuid())
+
+  dosage String
+
+  userId     String?
+  User       User?     @relation(fields: [userId], references: [id])
+  pharmacyId String?
+  Pharmacy   Pharmacy? @relation(fields: [pharmacyId], references: [id])
+  drugId     String?
+  Drug       Drug?     @relation(fields: [drugId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
