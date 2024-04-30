@@ -14,12 +14,12 @@ class AuthController {
     next: NextFunction
   ): Promise<Response> => {
     try {
-      const { businessName, address, email_address, password } = req.body;
+      const { businessName, email_address, address, password } = req.body;
 
       const pharmacy = await this.service.signupPharmacy(
         businessName,
-        address,
         email_address,
+        address,
         password
       );
 
